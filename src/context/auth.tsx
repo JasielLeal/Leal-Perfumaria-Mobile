@@ -3,7 +3,7 @@ import { Session } from "../api/Auth/Sesssion";
 import { FieldValues } from "react-hook-form";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { jwtDecode } from "jwt-decode";
-import { ActivityIndicator, View, Image } from "react-native";
+import { ActivityIndicator, View, Image, ImageProps, ImageSourcePropType } from "react-native";
 import logo from '../../assets/logo.png';
 interface AuthContextData {
   signed: boolean;
@@ -12,6 +12,7 @@ interface AuthContextData {
     name: string;
     email: string;
     token: string;
+    avatar: string
   } | null
   singInFc(data: FieldValues): Promise<void>
   loading: boolean;
@@ -22,7 +23,7 @@ interface User {
   name: string;
   email: string;
   token: string;
-
+  avatar: string
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -35,7 +36,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     async function loadStoragedData() {
       try {
-        
+
         const storagedToken = await AsyncStorage.getItem('@Token:');
         const storagedUser = await AsyncStorage.getItem('@User:');
 
@@ -78,7 +79,7 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider value={{ signed: !!user, user, singInFc, loading }}>
       {loading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Image source={logo} style={{ width: 150, height: 70 }} resizeMode="contain"/>
+          <Image source={logo} style={{ width: 150, height: 70 }} resizeMode="contain" />
           <ActivityIndicator size="large" color="#F43F5E" />
         </View>
       ) : (

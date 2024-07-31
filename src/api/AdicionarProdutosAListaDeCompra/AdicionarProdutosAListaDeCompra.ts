@@ -16,5 +16,5 @@ export async function AdicionarProdutosAListaDeCompra(code: FieldValues) {
   }
 );
 
-  return response;
+  return response
 }

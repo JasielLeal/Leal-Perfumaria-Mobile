@@ -12,7 +12,7 @@
       "backgroundColor": "#ffffff"
     },
     "plugins": [
-      
+      "expo-font"
     ],
     "ios": {
       "supportsTablet": true

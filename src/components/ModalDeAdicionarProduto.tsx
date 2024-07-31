@@ -67,7 +67,7 @@ export function ModalDeAdicionarProduto() {
     return (
         <>
             <View>
-                <TouchableOpacity onPress={() => setModalVisible(true)} className="bg-[#F43F5E] rounded-md p-3">
+                <TouchableOpacity onPress={() => setModalVisible(true)} className="bg-[#F43F5E] rounded-md p-2">
                     <Text className="text-white">
                         <Icon name="plus" size={20} />
                     </Text>

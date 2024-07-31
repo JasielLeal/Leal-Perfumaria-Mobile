@@ -12,6 +12,7 @@ export interface MonthlyExtractProps {
             month: {
                 id: string
                 customerName: string;
+                transictionType: string;
                 value: string;
                 createdAt: string;
                 saleProduct: [
@@ -36,7 +37,7 @@ export interface MonthlyExtractProps {
 
 export function DetalhesVenda({ route }: MonthlyExtractProps) {
 
-    const { customerName, value, createdAt, saleProduct } = route.params.month;
+    const { customerName, value, createdAt, saleProduct, id, transictionType } = route.params.month;
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     return (
@@ -66,11 +67,11 @@ export function DetalhesVenda({ route }: MonthlyExtractProps) {
                     </View>
                     <View className="flex flex-row justify-between">
                         <Text className="text-gray-600">Forma de Pagamento</Text>
-                        <Text className="font-semibold text-base">Pix</Text>
+                        <Text className="font-semibold text-base">{transictionType}</Text>
                     </View>
                     <Text className="font-semibold text-xl my-3">Produtos</Text>
                     {saleProduct?.map((product) => (
-                        <View key={product.id}>
+                        <View key={id}>
                             <View className="flex flex-row items-center justify-between">
                                 <View className="flex flex-row items-center">
                                     <Text className="font-semibold text-base w-[25px]">{product.amount}</Text>
@@ -83,7 +84,7 @@ export function DetalhesVenda({ route }: MonthlyExtractProps) {
                         </View>
                     ))}
                 </View>
-                
+
             </View>
         </>
     )

@@ -9,6 +9,7 @@ import { Picker } from "@react-native-picker/picker";
 import { useEffect, useState } from "react";
 import { monthlyExtract, monthlyExtractRequest } from "../api/monthlyExtract/monthlyExtract";
 import { RootStackParamList } from "../types/navigation";
+import { Button } from "../components/Button";
 
 export function Extrato() {
 
@@ -82,19 +83,19 @@ export function Extrato() {
         setSelectedValue(currentMonth.toString().padStart(2, '0'));
     }, []);
 
-    const { data: MonthlyAmount } = useQuery({
+    const { data: MonthlyAmount, isPending } = useQuery({
         queryKey: ['MonthlyValue', month],
         queryFn: () => MonthlyValue({ month } as MonthlyValueRequest),
     });
 
-    const { 
-        data, 
-        fetchNextPage, 
-        hasNextPage, 
-        isFetchingNextPage 
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage
     } = useInfiniteQuery({
         queryKey: ['MonthlyExtract', month, search],
-        queryFn: ({ pageParam = 0 }) => monthlyExtract({ month, search, take: 10, skip: pageParam*10 } as monthlyExtractRequest),
+        queryFn: ({ pageParam = 0 }) => monthlyExtract({ month, search, take: 10, skip: pageParam * 10 } as monthlyExtractRequest),
         getNextPageParam: (lastPage, allPages) => lastPage.length === 10 ? allPages.length : undefined,
         initialPageParam: 0
     });
@@ -103,30 +104,26 @@ export function Extrato() {
         <SafeAreaView>
             <View className="bg-[#f5f7fb] h-screen">
                 <View className="px-5">
-                    <View className="mt-16 flex flex-row items-center justify-between">
-                        <TouchableOpacity className="bg-[#F43F5E] flex rounded-md p-3" onPress={() => navigation.navigate('Home')}>
-                            <Text className="text-white">
-                                <Icon name="arrow-left" size={20} />
-                            </Text>
-                        </TouchableOpacity>
-                        <Text className="text-center text-base font-semibold">Extrato</Text>
+                    <View className="mt-7 flex flex-row items-center justify-between">
+                        <Button iconSize={20} iconName="chevron-back" routerBack="Home"/>
+                        <Text className="text-center text-base font-semibold text-zinc-800">Extrato</Text>
                         <Text className="text-center text-base font-semibold w-[50px]"></Text>
                     </View>
 
-                    <View className="mt-10">
-                        <Text className="text-gray-600 font-medium">Saldo do mês</Text>
+                    <View className="mt-5">
+                        <Text className="text-zinc-800 font-medium text-xs">Saldo do mês</Text>
                         <View className="flex flex-row justify-between">
                             {
                                 visible ?
                                     <>
-                                        <Text className="text-xl font-semibold">{MonthlyAmount ? `R$ ${formatCurrency(String(MonthlyAmount))}` : 'R$ 00,00'}</Text>
+                                        <Text className="text-zinc-800 font-semibold">{MonthlyAmount ? `R$ ${formatCurrency(String(MonthlyAmount))}` : 'R$ 00,00'}</Text>
                                         <TouchableOpacity onPress={visibleOn}>
                                             <Icon name="eye" size={18} color="#F43F5E" />
                                         </TouchableOpacity>
                                     </>
                                     :
                                     <>
-                                        <Text className="text-xl font-semibold">
+                                        <Text className="text-zinc-800 font-semibold">
                                             R$ ****
                                         </Text>
                                         <TouchableOpacity onPress={visibleOn}>
@@ -158,21 +155,25 @@ export function Extrato() {
                     </View>
 
                     <FlatList
-                        style={{ marginBottom: 550 }}
+                        style={{ marginBottom: 450 }}
                         data={data?.pages.flatMap(page => page)}
                         keyExtractor={(item) => String(item.id)}
                         renderItem={({ item }) => (
-                            <TouchableOpacity onPress={() => navigation.navigate('DetalhesVenda', { month: item })}>
-                                <View className="flex flex-row justify-between items-center p-3 bg-white rounded-lg my-2">
-                                    <View className="flex flex-row justify-between items-center gap-10">
-                                        <Icon name="money-bill-wave" size={18} color="#F43F5E" />
+                            <TouchableOpacity onPress={() => navigation.navigate('DetalhesVenda', { month: item })} key={item.createdAt}>
+                                <View className="flex flex-row justify-between items-center p-3 bg-white rounded-lg my-2" key={item.id}>
+                                    <View className="flex flex-row justify-between items-center gap-5" >
+                                        <View className="border border-[#00000018] rounded-lg p-3">
+                                            <Icon name="money-bill-wave" size={18} color="#F43F5E" />
+                                        </View>
                                         <View>
                                             <Text className="font-semibold text-base">{item.customerName}</Text>
-                                            <Text className="text-green-500 text-base text-semibold">R$ {formatCurrency(item.value)}</Text>
-                                            <Text className="text-gray-600 font-semibold">Pix</Text>
+                                            <Text className="text-gray-600 font-semibold">{item.transictionType}</Text>
                                         </View>
                                     </View>
-                                    <Icons name="keyboard-arrow-right" size={28} color="#F43F5E" />
+                                    <View className="flex items-end">
+                                        <Text>R$ {formatCurrency(item.value)}</Text>
+                                        <Icons name="keyboard-arrow-right" size={28} color="#F43F5E" />
+                                    </View>
                                 </View>
                             </TouchableOpacity>
                         )}

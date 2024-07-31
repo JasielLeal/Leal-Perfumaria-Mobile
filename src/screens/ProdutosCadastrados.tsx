@@ -10,6 +10,9 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../types/navigation";
 import { DeletarProdutoCadastrado } from "../api/DeletarProdutoCadastrado/DeletarProdutoCadastrado";
 import logo from '../../assets/logo.png';
+import LottieView from "lottie-react-native";
+import { LongPressMenu } from "../components/Teste";
+import { Button } from "../components/Button";
 export function ListagemDePedidos() {
 
     const [search, setSearch] = useState('')
@@ -59,12 +62,8 @@ export function ListagemDePedidos() {
                 :
                 <View className="w-full bg-[#f5f7fb] h-screen">
                     <View className="mt-16 flex flex-row items-center justify-between px-5">
-                        <TouchableOpacity className="bg-[#F43F5E] flex rounded-md p-3" onPress={() => navigation.navigate('Home')}>
-                            <Text className="text-white">
-                                <Icon name="arrow-left" size={20} />
-                            </Text>
-                        </TouchableOpacity>
-                        <Text className="text-center text-base font-semibold">Produtos cadastrados</Text>
+                        <Button iconName="chevron-back" iconSize={20} routerBack="Home"/>
+                        <Text className="text-center font-semibold">Produtos cadastrados</Text>
                         <ModalDeAdicionarProduto />
                     </View>
 
@@ -77,31 +76,29 @@ export function ListagemDePedidos() {
                         />
                     </View>
 
-
-
                     {data?.map((produto: produtoProps) => (
-                        <View className="px-5 flex flex-row items-center mt-10 justify-between" key={produto.id}>
+                        <View className="px-5 flex flex-row items-center mt-5 justify-between" key={produto.id}>
                             <View className="flex flex-row">
-                                <View className="p-2 bg-[#F43F5E] rounded-md mr-3 ">
+                                <View className="p-3 bg-[#F43F5E] mr-3 rounded-full">
                                     <Text className="text-white">
-                                        <Icon name="check" size={30} />
+                                        <Icon name="check" size={20}/>
                                     </Text>
                                 </View>
                                 <View>
-                                    <Text className="font-semibold text-sm ">
+                                    <Text className="font-semibold text-xs">
                                         {produto.name}
                                     </Text>
-                                    <Text className="text-gray-500">
+                                    <Text className="text-gray-500 text-xs">
                                         {produto.code}
                                     </Text>
                                 </View>
                             </View>
-                            <View className="flex flex-row items-center gap-3">
-                                <Text className="font-medium text-base flex justify-centers gap-2">
+                            <View className="flex flex-row  gap-3">
+                                <Text className="font-medium text-xs flex justify-centers gap-2">
                                     R$ {produto.value ? formatCurrency(produto.value) : '00,00'}
                                 </Text>
                                 <TouchableOpacity onPress={async () => await DeletarProdutoCadastradoFn(produto.code)}>
-                                    <Feather name="trash-2" size={20} className="" color={'#F43F5E'} />
+                                    <Feather name="trash-2" size={20} color={'#F43F5E'} />
                                 </TouchableOpacity>
                             </View>
 
@@ -112,6 +109,7 @@ export function ListagemDePedidos() {
                     }
                 </View>
             }
+            
         </ScrollView>
     )
 }

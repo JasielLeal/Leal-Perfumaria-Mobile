@@ -10,6 +10,9 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../types/navigation";
 import { calcularTotal, formatCurrency } from "../utils/formatNumber";
 import Toast from "react-native-toast-message";
+import LottieView from "lottie-react-native";
+import axios from "axios";
+import { AdicionarProduto } from "../api/AdicionarProduto/AdicionarProduto";
 
 export interface productProps {
     id: string;
@@ -35,6 +38,8 @@ export function IniciarVenda() {
         });
     };
 
+    const [sucess, setSucess] = useState(false)
+
     const calcularTotalGeral = () => {
         const total = products.reduce((acc, product) => {
             if (!product.qnt || !product.value) return acc;
@@ -42,6 +47,13 @@ export function IniciarVenda() {
         }, 0);
         return `R$ ${formatCurrency(total.toFixed(2))}`;
     };
+
+    const {mutateAsync: AdicionarProdutoFn} = useMutation({
+        mutationFn: AdicionarProduto,
+        onSuccess: (response) =>{
+            console.log('Deu certo')
+        }
+    })
 
     const { mutateAsync: AdicionarProdutosAListaDeCompraFn } = useMutation({
         mutationFn: AdicionarProdutosAListaDeCompra,
@@ -51,13 +63,17 @@ export function IniciarVenda() {
             const productNew = { code: response.data.code, amount: newInputValue };
             setProducts([...products, product]);
             setProductsBack([...productsBack, productNew]);
-            console.log(productsBack)
             setInputValue('');
-            setTransictionType('')
             showToast('success', 'Sucesso', 'Produto Adicionado');
         },
-        onError: () => {
-            showToast('error', 'Erro', 'Algo deu errado');
+        onError: (error) => {
+            if(axios.isAxiosError(error)){
+                const status = error.response?.status
+                console.log(status)
+                switch (status){
+                    case 404: ''
+                }
+            }
         },
     });
 
@@ -69,20 +85,17 @@ export function IniciarVenda() {
             setProducts([]);
             setProductsBack([])
             setCustomerName('');
-            showToast('success', 'Sucesso', 'Venda criada com sucesso');
+            setTransictionType('')
+            setSucess(true)
         },
-        onError: () => {
+        onError: (error) => {
+
             showToast('error', 'Erro', 'Erro ao criar a venda');
         },
     });
 
     const handleScan = async (code: FieldValues) => {
-        try {
-            await AdicionarProdutosAListaDeCompraFn(code);
-        } catch (error) {
-            console.error("Error adding product:", error);
-            showToast('error', 'Erro', 'Algo deu errado ao adicionar o produto');
-        }
+        await AdicionarProdutosAListaDeCompraFn(code);
     };
 
     const handleCreateSale = async () => {
@@ -103,16 +116,18 @@ export function IniciarVenda() {
     };
 
     return (
-        <ScrollView>
+        <>
             <View className="mt-16 flex flex-row items-center justify-between px-5">
                 <TouchableOpacity className="bg-[#F43F5E] flex rounded-md p-3" onPress={() => navigation.navigate('Home')}>
                     <Text className="text-white">
                         <Icon name="arrow-left" size={20} />
                     </Text>
                 </TouchableOpacity>
-                <Text className="text-center text-base font-semibold">Produtos cadastrados</Text>
+                <Text className="text-center text-base font-semibold">Iniciar Venda</Text>
                 <Text className="text-center text-base font-semibold w-[50px]"></Text>
             </View>
+
+
             <View className="px-5 mt-10">
                 <TextInput
                     placeholder="Digite o nome do cliente"
@@ -137,8 +152,6 @@ export function IniciarVenda() {
                 />
 
                 <Scanner onScan={handleScan} />
-
-
 
                 <View>
                     <View className="flex flex-row justify-between mt-10">
@@ -173,8 +186,24 @@ export function IniciarVenda() {
                     <TouchableOpacity onPress={handleCreateSale}>
                         <Text className="bg-[#F43F5E] text-white text-center font-semibold p-4 rounded-md text-base mt-10">Finalizar Pedido</Text>
                     </TouchableOpacity>
+
                 </View>
+
+
             </View>
-        </ScrollView>
+            {/* Lottie Animation */}
+            {sucess ?
+                <View className="absolute inset-0 bg-[#00000094] bg-opacity-50 z-50 flex items-center justify-center h-screen w-full">
+                    <LottieView
+                        source={require('../lottie/animation.json')}
+                        autoPlay
+                        loop={false}
+                        onAnimationFinish={() => setSucess(false)}
+                        style={{ width: 200, height: 200 }}
+                    />
+                </View>
+                :
+                ''}
+        </>
     );
 }

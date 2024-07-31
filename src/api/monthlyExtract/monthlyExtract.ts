@@ -27,6 +27,5 @@ export async function monthlyExtract({
     },
   });
   const teste = response.data
-  console.log(teste.length)
   return response.data;
 }
