@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TouchableOpacity, View, Text, TextInput, ScrollView } from "react-native";
+import { TouchableOpacity, View, Text, TextInput, ScrollView, Alert, Platform } from "react-native";
 import { Scanner } from "../components/Scanner";
 import { InvalidateQueryFilters, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AdicionarProdutosAListaDeCompra } from "../api/AdicionarProdutosAListaDeCompra/AdicionarProdutosAListaDeCompra";
@@ -46,14 +46,7 @@ export function IniciarVenda() {
             return acc + (Number(product.qnt) * Number(product.value) / 100);
         }, 0);
         return `R$ ${formatCurrency(total.toFixed(2))}`;
-    };
-
-    const {mutateAsync: AdicionarProdutoFn} = useMutation({
-        mutationFn: AdicionarProduto,
-        onSuccess: (response) =>{
-            console.log('Deu certo')
-        }
-    })
+    }
 
     const { mutateAsync: AdicionarProdutosAListaDeCompraFn } = useMutation({
         mutationFn: AdicionarProdutosAListaDeCompra,
@@ -67,11 +60,11 @@ export function IniciarVenda() {
             showToast('success', 'Sucesso', 'Produto Adicionado');
         },
         onError: (error) => {
-            if(axios.isAxiosError(error)){
+            if (axios.isAxiosError(error)) {
                 const status = error.response?.status
-                console.log(status)
-                switch (status){
-                    case 404: ''
+
+                switch (status) {
+                    case 404: Alert.alert('Error', 'Codigo de barra não cadastrado ou não encontrado')
                 }
             }
         },
@@ -110,13 +103,13 @@ export function IniciarVenda() {
         try {
             await CriarVendaFn({ customerName, products: productsBack, transictionType });
         } catch (error) {
-            console.error("Error creating sale:", error);
+
             showToast('error', 'Erro', 'Erro ao criar a venda');
         }
     };
 
     return (
-        <>
+        <View className="bg-[#f5f7fb] w-full h-screen">
             <View className="mt-16 flex flex-row items-center justify-between px-5">
                 <TouchableOpacity className="bg-[#F43F5E] flex rounded-md p-3" onPress={() => navigation.navigate('Home')}>
                     <Text className="text-white">
@@ -128,7 +121,8 @@ export function IniciarVenda() {
             </View>
 
 
-            <View className="px-5 mt-10">
+
+            <ScrollView className="px-5 mt-10">
                 <TextInput
                     placeholder="Digite o nome do cliente"
                     className="bg-white p-3 rounded-md"
@@ -173,24 +167,25 @@ export function IniciarVenda() {
                             </Text>
                         </View>
                     ))}
-
-                    <View className="flex flex-row items-center justify-between mt-10">
-                        <Text className="text-xl font-semibold">
-                            Valor total:
-                        </Text>
-                        <Text className="text-xl font-semibold">
-                            {calcularTotalGeral()}
-                        </Text>
-                    </View>
-
-                    <TouchableOpacity onPress={handleCreateSale}>
-                        <Text className="bg-[#F43F5E] text-white text-center font-semibold p-4 rounded-md text-base mt-10">Finalizar Pedido</Text>
-                    </TouchableOpacity>
-
                 </View>
+            </ScrollView>
 
-
+            <View className={`px-5 ${Platform.OS === 'ios' ? 'mb-[120px]' : 'mb-[80px]'}`}>
+                <View className="flex flex-row items-center justify-between mt-10 mb-5">
+                    <Text className="text-xl font-semibold">
+                        Valor total:
+                    </Text>
+                    <Text className="text-xl font-semibold">
+                        {calcularTotalGeral()}
+                    </Text>
+                </View>
+                <View className="rounded-xl">
+                    <TouchableOpacity onPress={handleCreateSale} className="rounded-xl">
+                        <Text className="bg-[#F43F5E] text-white text-center font-semibold p-4 rounded-md text-base rouded-xl">Finalizar Pedido</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
+
             {/* Lottie Animation */}
             {sucess ?
                 <View className="absolute inset-0 bg-[#00000094] bg-opacity-50 z-50 flex items-center justify-center h-screen w-full">
@@ -204,6 +199,6 @@ export function IniciarVenda() {
                 </View>
                 :
                 ''}
-        </>
+        </View>
     );
 }

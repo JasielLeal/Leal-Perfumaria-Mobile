@@ -49,7 +49,7 @@ export function Home() {
                             <Text className="font-semibold text-zinc-800 text-xs">{user?.name}</Text>
                         </View>
                     </View>
-                    <View className="border border-[#00000018] rounded-lg">
+                    <View className="border border-[#00000018] rounded-xl">
                         <Button iconName="notifications-outline" iconSize={25} />
                     </View>
                 </View>
@@ -58,14 +58,14 @@ export function Home() {
                     <Text className="font-semibold text-gray-600 mt-8 mb-3">Recentes</Text>
                     {isPending
                         ?
-                        <View className="w-full bg-gray-200 rounded-lg py-7">
+                        <View className="w-full bg-gray-200 rounded-xl py-7">
                             <ActivityIndicator size="large" color="#F43F5E" />
                         </View>
                         :
                         <>
                             {data?.map((month: monthProps) => (
                                 <TouchableOpacity onPress={() => navigation.navigate('DetalhesVenda', { month })} key={month.createdAt}>
-                                    <View className="flex flex-row justify-between items-center p-3 bg-white rounded-lg my-2" key={month.id}>
+                                    <View className="flex flex-row justify-between items-center p-3 bg-white rounded-xl my-2" key={month.id}>
                                         <View className="flex flex-row justify-between items-center gap-5" >
                                             <View className="border border-[#00000018] rounded-lg p-3">
                                                 <Icon name="money-bill-wave" size={18} color="#F43F5E" />

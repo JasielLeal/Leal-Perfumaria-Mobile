@@ -34,8 +34,10 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+
     async function loadStoragedData() {
       try {
+        
         const storagedToken = await AsyncStorage.getItem('token');
         const storagedUser = await AsyncStorage.getItem('user');
         if (storagedToken && storagedUser) {

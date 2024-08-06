@@ -8,6 +8,6 @@ export async function ListarTodosOsUsuarios() {
       Authorization: `Bearer ${token}`,
     },
   });
-
+  
   return response.data
 }

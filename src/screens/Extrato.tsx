@@ -101,10 +101,10 @@ export function Extrato() {
     });
 
     return (
-        <SafeAreaView>
+        <>
             <View className="bg-[#f5f7fb] h-screen">
-                <View className="px-5">
-                    <View className="mt-7 flex flex-row items-center justify-between">
+                <View className="px-5 mt-16">
+                    <View className="flex flex-row items-center justify-between">
                         <Button iconSize={20} iconName="chevron-back" routerBack="Home"/>
                         <Text className="text-center text-base font-semibold text-zinc-800">Extrato</Text>
                         <Text className="text-center text-base font-semibold w-[50px]"></Text>
@@ -160,14 +160,14 @@ export function Extrato() {
                         keyExtractor={(item) => String(item.id)}
                         renderItem={({ item }) => (
                             <TouchableOpacity onPress={() => navigation.navigate('DetalhesVenda', { month: item })} key={item.createdAt}>
-                                <View className="flex flex-row justify-between items-center p-3 bg-white rounded-lg my-2" key={item.id}>
+                                <View className="flex flex-row justify-between items-center p-3 bg-white rounded-xl my-2" key={item.id}>
                                     <View className="flex flex-row justify-between items-center gap-5" >
                                         <View className="border border-[#00000018] rounded-lg p-3">
                                             <Icon name="money-bill-wave" size={18} color="#F43F5E" />
                                         </View>
                                         <View>
-                                            <Text className="font-semibold text-base">{item.customerName}</Text>
-                                            <Text className="text-gray-600 font-semibold">{item.transictionType}</Text>
+                                            <Text className="font-semibold text-xs">{item.customerName}</Text>
+                                            <Text className="text-gray-600 font-semibold text-xs">{item.transictionType}</Text>
                                         </View>
                                     </View>
                                     <View className="flex items-end">
@@ -182,11 +182,11 @@ export function Extrato() {
                                 fetchNextPage();
                             }
                         }}
-                        ListFooterComponent={isFetchingNextPage ? <ActivityIndicator /> : <Text className="font-semibold text-center">Final da Lista</Text>}
+                       
                     />
 
                 </View>
             </View>
-        </SafeAreaView>
+        </>
     );
 }

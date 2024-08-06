@@ -13,7 +13,6 @@ export async function CriarVenda({
   transictionType,
 }: CriarVendaProsps) {
   const token = await AsyncStorage.getItem("@Token:");
-  console.log(transictionType)
   const response = await backend.post(
     `sale/create`,
     {

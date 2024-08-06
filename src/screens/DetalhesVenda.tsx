@@ -1,10 +1,8 @@
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 import { format } from "date-fns";
 import { ptBR } from 'date-fns/locale';
 import { formatCurrency } from "../utils/formatNumber";
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "../types/navigation";
+import { Button } from "../components/Button";
 
 export interface MonthlyExtractProps {
     route: {
@@ -33,22 +31,15 @@ export interface MonthlyExtractProps {
     };
 }
 
-
-
 export function DetalhesVenda({ route }: MonthlyExtractProps) {
 
     const { customerName, value, createdAt, saleProduct, id, transictionType } = route.params.month;
-    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     return (
         <>
-            <View className="px-5">
+            <View className="px-5 h-screen bg-[#f5f7fb]">
                 <View className="mt-16 flex flex-row items-center justify-between">
-                    <TouchableOpacity className="bg-[#F43F5E] flex rounded-md p-3" onPress={() => navigation.navigate('Extrato')}>
-                        <Text className="text-white">
-                            <Icon name="arrow-left" size={20} />
-                        </Text>
-                    </TouchableOpacity>
+                    <Button iconSize={20} iconName="chevron-back" routerBack="Extrato" />
                     <Text className="text-center text-base font-semibold">Detalhes da Venda</Text>
                     <Text className="text-center text-base font-semibold w-[50px]"></Text>
                 </View>
