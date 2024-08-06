@@ -36,10 +36,8 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     async function loadStoragedData() {
       try {
-
-        const storagedToken = await AsyncStorage.getItem('@Token:');
-        const storagedUser = await AsyncStorage.getItem('@User:');
-
+        const storagedToken = await AsyncStorage.getItem('token');
+        const storagedUser = await AsyncStorage.getItem('user');
         if (storagedToken && storagedUser) {
           setUser(JSON.parse(storagedUser));
 
@@ -70,8 +68,8 @@ export function AuthProvider({ children }) {
     const response = await Session(dataValue)
     const { data } = response
     setUser(data.user)
-    await AsyncStorage.setItem('@Token:', data.user.token)
-    await AsyncStorage.setItem('@User:', JSON.stringify(data.user))
+    await AsyncStorage.setItem('token', data.user.token)
+    await AsyncStorage.setItem('user', JSON.stringify(data.user))
     setLoading(false);
   }
 

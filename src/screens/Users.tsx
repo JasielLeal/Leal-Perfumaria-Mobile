@@ -17,6 +17,8 @@ export function Users() {
         avatar: string
     }
 
+    console.log(data)
+
     return (
         <View className="h-screen bg-[#f5f7fb]">
             <View className="px-5">
@@ -29,7 +31,7 @@ export function Users() {
                     {data?.map((user: UserProps) => (
                         <View className="flex flex-row items-center" key={user.id}>
                             <View className="mr-3">
-                                <Image source={{ uri: user?.avatar }} resizeMode="contain" width={60} height={60} className="rounded-full" />
+                                <Image source={{ uri: user?.avatar }} resizeMode="contain" width={40} height={40} className="rounded-full" />
                             </View>
                             <View className="my-2">
                                 <Text className="font-semibold text-sm text-zinc-800">{user?.name}</Text>
@@ -39,6 +41,7 @@ export function Users() {
                     ))}
                 </View>
             </View>
+           
         </View>
     )
 }
